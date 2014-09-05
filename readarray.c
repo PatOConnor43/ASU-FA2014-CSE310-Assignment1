@@ -1,6 +1,7 @@
 // File: readarray.c
-// Description: A list of integers is loaded as input and the integers are
-//				into an array in the order that they are read.
+// Description:
+// A list of integers is loaded as input and the integers are
+// into an array in the order that they are read.
 // Author Information:
 // Patrick O'Connor
 // paoconno@asu.edu
@@ -15,20 +16,20 @@
 int main(int argc, char* argv[]){
 
 	//Variables
-	int* array;							//Array for the integers
-	char c;								//Current character on the line
-	char* line;							//Current line that is read from input file
-	char* charp;						//Pointer to c
-	int i, j;							//i is used as an index for array, j is used in testing
-	FILE* fp;							//Pointer to the input file
+	int* array;				//Array for the integers
+	char c;					//Current character on the line
+	char* line;				//Current line that is read from input file
+	char* charp;			//Pointer to c
+	int i, j, count;		//index variables
+	FILE* fp;				//Pointer to the input file
 
-	//Allocates array and line on the heap
-	array = (int*)malloc(MAX_SIZE*sizeof(int));
-	line = (char*)malloc(MAX_SIZE*sizeof(char));
+	//Allocates line on the heap
+	line = (char*)malloc(sizeof(char));
 
 	//Initialize neccesary variables
 	i = 0;
 	j = 0;
+	count = 0;
 	fp = fopen(argv[1], "r");
 	c = fgetc(fp);
 	charp = &c;
@@ -41,9 +42,25 @@ int main(int argc, char* argv[]){
 		strncat(line, charp, 1);
 	}
 
-	//Add a null terminator at the end of line just in case garbage gets put into line
+	//Add a null terminator at the end of line just in case
+	//garbage gets put into line
 	line[strlen(line) -1] = '\0';
-	//printf("%s", line);						//Testing the value of line
+	//Testing the value of line
+	//printf("%s\n", line);
+
+	//Find how many integers are in the string
+	charp = line;
+	while(*charp != '\0'){
+		if(*charp > 47 && *charp < 58){
+			if(*(charp+1) < 48 || *(charp+1) > 57){
+				count++;
+			}
+		}
+		charp++;
+	}
+
+	//Allocate size of array
+	array = malloc(count*sizeof(int));
 
 	//Create a temporary char* that will hold each token from strtok function
 	char* temp = strtok(line, " ");
@@ -59,7 +76,8 @@ int main(int argc, char* argv[]){
 
 		array[i] = atoi(temp);
 		i++;
-		//printf("This is temp: %s\n", temp);	//Testing each value of temp
+		//Testing each value of temp
+		//printf("This is temp: %s\n", temp);
 		temp = strtok(NULL, " ");
 	}
 
